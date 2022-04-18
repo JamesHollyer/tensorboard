@@ -31,11 +31,14 @@ export class LinkedTimeFobComponent {
   @Input() step!: number;
 
   @Output() stepChange = new EventEmitter<number>();
+  @Output() removeFob = new EventEmitter();
 
   isTyping = false;
 
   typeStepRequested() {
-    this.isTyping = true;
+    console.log('got click');
+    // this.isTyping = true;
+    this.removeFob.emit();
   }
 
   stepTyped(event: InputEvent) {
