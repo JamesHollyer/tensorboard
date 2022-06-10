@@ -66,6 +66,7 @@ export class CardViewContainer {
 
   @HostBinding('class.full-width') showFullWidth: boolean = false;
   @HostBinding('class.full-height') showFullHeight: boolean = false;
+  @HostBinding('class.height-with-table') addTableHeight: boolean = false; // update this boolean when step selector is enabled
 
   onVisibilityChange({visible}: {visible: boolean}) {
     this.isEverVisible = this.isEverVisible || visible;
