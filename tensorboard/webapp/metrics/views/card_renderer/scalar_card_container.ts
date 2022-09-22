@@ -54,6 +54,7 @@ import {
   getMetricsLinkedTimeEnabled,
   getMetricsLinkedTimeSelection,
   getMetricsStepSelectorEnabled,
+  getMetricsStepSelectorRangeEnabled,
   getRun,
   getRunColorMap,
 } from '../../../selectors';
@@ -554,10 +555,33 @@ export class ScalarCardContainer implements CardRenderer, OnInit, OnDestroy {
     combineLatest([
       this.minMaxSteps$,
       this.store.select(getMetricsStepSelectorEnabled),
-    ]).subscribe(([{minStep}, enableStepSelector]) => {
-      this.stepSelectorTimeSelection$.next(
-        enableStepSelector ? {start: {step: minStep}, end: null} : null
-      );
+      this.store.select(getMetricsStepSelectorRangeEnabled),
+    ]).subscribe(([{minStep, maxStep}, enableStepSelector, rangeEnabled]) => {
+      if (!enableStepSelector) {
+        this.stepSelectorTimeSelection$.next(null);
+        return;
+      }
+
+      let currentSelection = this.stepSelectorTimeSelection$.getValue();
+      if (currentSelection === null) {
+        // Do not set stepSelectorTimeSelection until minStep has been initialized.
+        if (minStep === Infinity) {
+          return;
+        }
+        this.stepSelectorTimeSelection$.next({
+          start: {step: minStep},
+          end: rangeEnabled ? {step: maxStep} : null,
+        });
+        return;
+      }
+
+      if (currentSelection.end === null && rangeEnabled) {
+        this.stepSelectorTimeSelection$.next({
+          ...currentSelection,
+          end: {step: maxStep},
+        });
+        return;
+      }
     });
   }
 
@@ -612,6 +636,7 @@ export class ScalarCardContainer implements CardRenderer, OnInit, OnDestroy {
     newTimeSelectionWithAffordance: TimeSelectionWithAffordance
   ) {
     this.store.dispatch(timeSelectionChanged(newTimeSelectionWithAffordance));
+
     this.stepSelectorTimeSelection$.next(
       newTimeSelectionWithAffordance.timeSelection
     );

@@ -146,10 +146,11 @@ export class CardFobControllerComponent {
     newStep: number,
     timeSelection: TimeSelection
   ): TimeSelection {
+    let newTimeSelection = {start: timeSelection.start, end: timeSelection.end};
     // Single Selection
     if (!this.timeSelection.end) {
-      timeSelection.start.step = newStep;
-      return timeSelection;
+      newTimeSelection.start = {step: newStep};
+      return newTimeSelection;
     }
 
     // Range Selection
@@ -160,19 +161,18 @@ export class CardFobControllerComponent {
           ? ['end', 'start']
           : ['start', 'end'];
       this.currentDraggingFob = TIME_SELECTION_TO_FOB[newDraggingFob];
-      timeSelection[oldDraggingFob]!.step =
-        this.timeSelection[newDraggingFob]!.step;
-      timeSelection[newDraggingFob]!.step = newStep;
-      return timeSelection;
+      newTimeSelection[oldDraggingFob]! = this.timeSelection[newDraggingFob]!;
+      newTimeSelection[newDraggingFob]! = {step: newStep};
+      return newTimeSelection;
     }
 
     if (this.currentDraggingFob === Fob.END) {
-      timeSelection.end = {step: newStep};
-      return timeSelection;
+      newTimeSelection.end = {step: newStep};
+      return newTimeSelection;
     }
 
-    timeSelection.start.step = newStep;
-    return timeSelection;
+    newTimeSelection.start = {step: newStep};
+    return newTimeSelection;
   }
 
   mouseMove(event: MouseEvent) {
@@ -193,7 +193,6 @@ export class CardFobControllerComponent {
     if (newStep === null) {
       return;
     }
-
     const newTimeSelection = this.getNewTimeSelection(
       newStep,
       this.timeSelection
