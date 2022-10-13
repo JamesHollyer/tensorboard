@@ -2325,7 +2325,7 @@ describe('metrics reducers', () => {
 
       expect(nextState.tagFilter).toBe('');
     });
-
+    // noop
     it('does not hydrate when the value is null', () => {
       const beforeState = buildMetricsState({tagFilter: 'foo'});
       const action = routingActions.stateRehydratedFromUrl({
