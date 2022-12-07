@@ -1,0 +1,13 @@
+<div class="header-container" [ngSwitch]="header.type">
+  <mat-icon
+    *ngSwitchCase="ColumnHeaderType.VALUE_CHANGE"
+    svgIcon="change_history_24px"
+  ></mat-icon>
+  <mat-icon
+    *ngSwitchCase="ColumnHeaderType.PERCENTAGE_CHANGE"
+    svgIcon="change_history_24px"
+  ></mat-icon>
+  <div *ngSwitchDefault class="extra-right-padding"></div>
+
+  <span>{{ getHeaderTextColumn(header.type) }}</span>
+</div>

@@ -20,28 +20,27 @@ limitations under the License.
           <!-- This header is intentionally left blank for the color column -->
         </th>
         <ng-container *ngFor="let header of headers;">
-          <th (click)="headerClicked(header)">
+          <th *ngIf="header.enabled" (click)="headerClicked(header.type)">
             <div
               [draggable]="columnCustomizationEnabled"
               (dragstart)="dragStart(header)"
               (dragend)="dragEnd()"
               (dragenter)="dragEnter(header)"
-              [ngSwitch]="header"
               class="cell"
-              [ngClass]="getHeaderHighlightStyle(header)"
+              [ngClass]="getHeaderHighlightStyle(header.type)"
             >
-              <!-- order icon -->
-              <mat-icon
-                *ngSwitchCase="ColumnHeaders.VALUE_CHANGE"
+              <tb-data-table-header [header]="header"></tb-data-table-header>
+              <!-- <mat-icon
+                *ngSwitchCase="ColumnHeaderType.VALUE_CHANGE"
                 svgIcon="change_history_24px"
               ></mat-icon>
               <mat-icon
-                *ngSwitchCase="ColumnHeaders.PERCENTAGE_CHANGE"
+                *ngSwitchCase="ColumnHeaderType.PERCENTAGE_CHANGE"
                 svgIcon="change_history_24px"
               ></mat-icon>
               <div *ngSwitchDefault class="extra-right-padding"></div>
 
-              <span>{{ getHeaderTextColumn(header) }}</span>
+              <span>{{ getHeaderTextColumn(header.type) }}</span> -->
 
               <div class="sorting-icon-container">
                 <mat-icon
@@ -67,21 +66,24 @@ limitations under the License.
             <span [style.backgroundColor]="runData.COLOR"></span>
           </td>
           <ng-container *ngFor="let header of headers;">
-            <td [ngSwitch]="header">
-              <div *ngSwitchCase="ColumnHeaders.VALUE_CHANGE" class="cell">
+            <td *ngIf="header.enabled" [ngSwitch]="header.type">
+              <div *ngSwitchCase="ColumnHeaderType.VALUE_CHANGE" class="cell">
                 <ng-container
                   *ngTemplateOutlet="arrow; context: {$implicit:runData.VALUE_CHANGE}"
                 ></ng-container>
-                {{ getFormattedDataForColumn(header, runData) }}
+                {{ getFormattedDataForColumn(header.type, runData) }}
               </div>
-              <div *ngSwitchCase="ColumnHeaders.PERCENTAGE_CHANGE" class="cell">
+              <div
+                *ngSwitchCase="ColumnHeaderType.PERCENTAGE_CHANGE"
+                class="cell"
+              >
                 <ng-container
                   *ngTemplateOutlet="arrow; context: {$implicit:runData.PERCENTAGE_CHANGE}"
                 ></ng-container>
-                {{ getFormattedDataForColumn(header, runData) }}
+                {{ getFormattedDataForColumn(header.type, runData) }}
               </div>
               <div *ngSwitchDefault class="cell extra-right-padding">
-                {{ getFormattedDataForColumn(header, runData) }}
+                {{ getFormattedDataForColumn(header.type, runData) }}
               </div>
             </td>
           </ng-container>

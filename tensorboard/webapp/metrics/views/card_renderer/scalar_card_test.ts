@@ -96,7 +96,7 @@ import {ScalarCardContainer} from './scalar_card_container';
 import {ScalarCardDataTable} from './scalar_card_data_table';
 import {ScalarCardFobController} from './scalar_card_fob_controller';
 import {
-  ColumnHeaders,
+  ColumnHeaderType,
   MinMaxStep,
   ScalarCardPoint,
   ScalarCardSeriesMetadata,
@@ -2559,22 +2559,22 @@ describe('scalar card', () => {
     beforeEach(() => {
       store.overrideSelector(getMetricsLinkedTimeEnabled, true);
       store.overrideSelector(getSingleSelectionHeaders, [
-        ColumnHeaders.RUN,
-        ColumnHeaders.SMOOTHED,
-        ColumnHeaders.VALUE,
-        ColumnHeaders.STEP,
-        ColumnHeaders.RELATIVE_TIME,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.SMOOTHED,
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.STEP,
+        ColumnHeaderType.RELATIVE_TIME,
       ]);
       store.overrideSelector(getRangeSelectionHeaders, [
-        ColumnHeaders.RUN,
-        ColumnHeaders.MIN_VALUE,
-        ColumnHeaders.MAX_VALUE,
-        ColumnHeaders.START_VALUE,
-        ColumnHeaders.END_VALUE,
-        ColumnHeaders.VALUE_CHANGE,
-        ColumnHeaders.PERCENTAGE_CHANGE,
-        ColumnHeaders.START_STEP,
-        ColumnHeaders.END_STEP,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.MIN_VALUE,
+        ColumnHeaderType.MAX_VALUE,
+        ColumnHeaderType.START_VALUE,
+        ColumnHeaderType.END_VALUE,
+        ColumnHeaderType.VALUE_CHANGE,
+        ColumnHeaderType.PERCENTAGE_CHANGE,
+        ColumnHeaderType.START_STEP,
+        ColumnHeaderType.END_STEP,
       ]);
     });
 
@@ -3044,7 +3044,7 @@ describe('scalar card', () => {
       );
 
       expect(scalarCardDataTable.componentInstance.dataHeaders).toContain(
-        ColumnHeaders.SMOOTHED
+        ColumnHeaderType.SMOOTHED
       );
 
       expect(
@@ -3082,7 +3082,7 @@ describe('scalar card', () => {
       );
 
       expect(scalarCardDataTable.componentInstance.dataHeaders).not.toContain(
-        ColumnHeaders.SMOOTHED
+        ColumnHeaderType.SMOOTHED
       );
     }));
 
@@ -3118,7 +3118,7 @@ describe('scalar card', () => {
         By.directive(ScalarCardDataTable)
       );
       scalarCardDataTable.componentInstance.sortingInfo = {
-        header: ColumnHeaders.VALUE,
+        header: ColumnHeaderType.VALUE,
         order: SortingOrder.ASCENDING,
       };
       fixture.detectChanges();
@@ -3163,7 +3163,7 @@ describe('scalar card', () => {
         By.directive(ScalarCardDataTable)
       );
       scalarCardDataTable.componentInstance.sortingInfo = {
-        header: ColumnHeaders.VALUE,
+        header: ColumnHeaderType.VALUE,
         order: SortingOrder.DESCENDING,
       };
       fixture.detectChanges();
@@ -3216,7 +3216,7 @@ describe('scalar card', () => {
         By.directive(ScalarCardDataTable)
       );
       scalarCardDataTable.componentInstance.sortingInfo = {
-        header: ColumnHeaders.VALUE,
+        header: ColumnHeaderType.VALUE,
         order: SortingOrder.DESCENDING,
       };
       fixture.detectChanges();
@@ -3273,7 +3273,7 @@ describe('scalar card', () => {
         By.directive(ScalarCardDataTable)
       );
       scalarCardDataTable.componentInstance.sortingInfo = {
-        header: ColumnHeaders.RUN,
+        header: ColumnHeaderType.RUN,
         order: SortingOrder.ASCENDING,
       };
       scalarCardDataTable.componentInstance.chartMetadataMap.run1.alias = {

@@ -29,6 +29,7 @@ import {
   getMetricsTagFilter,
   getMetricsTagMetadataLoadState,
   isMetricsSettingsPaneOpen,
+  isMetricsSlideoutMenuOpen,
 } from '../../store';
 import {PluginType} from '../../types';
 
@@ -40,6 +41,7 @@ import {PluginType} from '../../types';
       [isSidepaneOpen]="isSidepaneOpen$ | async"
       [initialTagsLoading]="initialTagsLoading$ | async"
       [filteredPluginTypes]="filteredPluginTypes$ | async"
+      [slideOutMenuOpen]="isSlideoutMenuOpen$ | async"
       (onSettingsButtonClicked)="onSettingsButtonClicked()"
       (onCloseSidepaneButtonClicked)="onCloseSidepaneButtonClicked()"
       (onPluginTypeToggled)="onPluginVisibilityToggled($event)"
@@ -53,6 +55,10 @@ export class MainViewContainer {
 
   readonly isSidepaneOpen$: Observable<boolean> = this.store.select(
     isMetricsSettingsPaneOpen
+  );
+
+  readonly isSlideoutMenuOpen$: Observable<boolean> = this.store.select(
+    isMetricsSlideoutMenuOpen
   );
 
   readonly initialTagsLoading$: Observable<boolean> = this.store

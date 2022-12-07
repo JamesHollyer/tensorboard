@@ -38,6 +38,8 @@ export class MainViewComponent {
 
   @Input() initialTagsLoading!: boolean;
 
+  @Input() slideOutMenuOpen!: boolean;
+
   @Output() onSettingsButtonClicked = new EventEmitter<void>();
 
   @Output() onCloseSidepaneButtonClicked = new EventEmitter<void>();
@@ -45,6 +47,8 @@ export class MainViewComponent {
   @Output() onPluginTypeToggled = new EventEmitter<PluginType>();
 
   @Output() onPluginTypeAllToggled = new EventEmitter<void>();
+
+  @Output() onSlideOutToggled = new EventEmitter<void>();
 
   constructor(private readonly host: ElementRef) {}
 

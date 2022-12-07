@@ -36,6 +36,7 @@ import {
   metricsResetImageBrightness,
   metricsResetImageContrast,
   metricsScalarPartitionNonMonotonicXToggled,
+  metricsSlideoutMenuToggled,
   metricsToggleIgnoreOutliers,
   metricsToggleImageShowActualSize,
   rangeSelectionToggled,
@@ -98,6 +99,7 @@ const RANGE_INPUT_SOURCE_TO_AFFORDANCE: Record<
       (linkedTimeSelectionChanged)="onLinkedTimeSelectionChanged($event)"
       (stepSelectorToggled)="onStepSelectorToggled()"
       (rangeSelectionToggled)="onRangeSelectionToggled()"
+      (onSlideOutToggled)="onSlideOutToggled()"
     >
     </metrics-dashboard-settings-component>
   `,
@@ -246,5 +248,9 @@ export class SettingsViewContainer {
         affordance: RANGE_INPUT_SOURCE_TO_AFFORDANCE[source],
       })
     );
+  }
+
+  onSlideOutToggled() {
+    this.store.dispatch(metricsSlideoutMenuToggled());
   }
 }

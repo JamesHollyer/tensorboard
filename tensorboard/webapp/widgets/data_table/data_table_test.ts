@@ -18,7 +18,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatIconModule} from '@angular/material/icon';
 import {By} from '@angular/platform-browser';
 import {
-  ColumnHeaders,
+  ColumnHeaderType,
   SelectedStepRunData,
   SortingInfo,
   SortingOrder,
@@ -42,12 +42,12 @@ class TestableComponent {
   @ViewChild('DataTable')
   dataTable!: DataTableComponent;
 
-  @Input() headers!: ColumnHeaders[];
+  @Input() headers!: ColumnHeaderType[];
   @Input() data!: SelectedStepRunData[];
   @Input() sortingInfo!: SortingInfo;
 
   @Input() sortDataBy!: (sortingInfo: SortingInfo) => void;
-  @Input() orderColumns!: (newOrder: ColumnHeaders[]) => void;
+  @Input() orderColumns!: (newOrder: ColumnHeaderType[]) => void;
 }
 
 describe('data table', () => {
@@ -61,7 +61,7 @@ describe('data table', () => {
   });
 
   function createComponent(input: {
-    headers?: ColumnHeaders[];
+    headers?: ColumnHeaderType[];
     data?: SelectedStepRunData[];
     sortingInfo?: SortingInfo;
   }): ComponentFixture<TestableComponent> {
@@ -70,7 +70,7 @@ describe('data table', () => {
     fixture.componentInstance.headers = input.headers || [];
     fixture.componentInstance.data = input.data || [];
     fixture.componentInstance.sortingInfo = input.sortingInfo || {
-      header: ColumnHeaders.RUN,
+      header: ColumnHeaderType.RUN,
       order: SortingOrder.ASCENDING,
     };
 
@@ -93,18 +93,18 @@ describe('data table', () => {
   it('displays given headers in order', () => {
     const fixture = createComponent({
       headers: [
-        ColumnHeaders.VALUE,
-        ColumnHeaders.RUN,
-        ColumnHeaders.STEP,
-        ColumnHeaders.RELATIVE_TIME,
-        ColumnHeaders.VALUE_CHANGE,
-        ColumnHeaders.START_STEP,
-        ColumnHeaders.END_STEP,
-        ColumnHeaders.START_VALUE,
-        ColumnHeaders.END_VALUE,
-        ColumnHeaders.MIN_VALUE,
-        ColumnHeaders.MAX_VALUE,
-        ColumnHeaders.PERCENTAGE_CHANGE,
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+        ColumnHeaderType.RELATIVE_TIME,
+        ColumnHeaderType.VALUE_CHANGE,
+        ColumnHeaderType.START_STEP,
+        ColumnHeaderType.END_STEP,
+        ColumnHeaderType.START_VALUE,
+        ColumnHeaderType.END_VALUE,
+        ColumnHeaderType.MIN_VALUE,
+        ColumnHeaderType.MAX_VALUE,
+        ColumnHeaderType.PERCENTAGE_CHANGE,
       ],
     });
     fixture.detectChanges();
@@ -139,18 +139,18 @@ describe('data table', () => {
   it('displays data in order', () => {
     const fixture = createComponent({
       headers: [
-        ColumnHeaders.VALUE,
-        ColumnHeaders.RUN,
-        ColumnHeaders.STEP,
-        ColumnHeaders.RELATIVE_TIME,
-        ColumnHeaders.VALUE_CHANGE,
-        ColumnHeaders.START_STEP,
-        ColumnHeaders.END_STEP,
-        ColumnHeaders.START_VALUE,
-        ColumnHeaders.END_VALUE,
-        ColumnHeaders.MIN_VALUE,
-        ColumnHeaders.MAX_VALUE,
-        ColumnHeaders.PERCENTAGE_CHANGE,
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+        ColumnHeaderType.RELATIVE_TIME,
+        ColumnHeaderType.VALUE_CHANGE,
+        ColumnHeaderType.START_STEP,
+        ColumnHeaderType.END_STEP,
+        ColumnHeaderType.START_VALUE,
+        ColumnHeaderType.END_VALUE,
+        ColumnHeaderType.MIN_VALUE,
+        ColumnHeaderType.MAX_VALUE,
+        ColumnHeaderType.PERCENTAGE_CHANGE,
       ],
       data: [
         {
@@ -204,10 +204,10 @@ describe('data table', () => {
   it('displays nothing when no data is available', () => {
     const fixture = createComponent({
       headers: [
-        ColumnHeaders.VALUE,
-        ColumnHeaders.RUN,
-        ColumnHeaders.STEP,
-        ColumnHeaders.RELATIVE_TIME,
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+        ColumnHeaderType.RELATIVE_TIME,
       ],
       data: [{id: 'someid'}],
     });
@@ -225,10 +225,10 @@ describe('data table', () => {
   it('emits sortDataBy event when header clicked', () => {
     const fixture = createComponent({
       headers: [
-        ColumnHeaders.VALUE,
-        ColumnHeaders.RUN,
-        ColumnHeaders.STEP,
-        ColumnHeaders.RELATIVE_TIME,
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+        ColumnHeaderType.RELATIVE_TIME,
       ],
     });
     fixture.detectChanges();
@@ -236,7 +236,7 @@ describe('data table', () => {
 
     headerElements[3].triggerEventHandler('click', {});
     expect(sortDataBySpy).toHaveBeenCalledOnceWith({
-      header: ColumnHeaders.STEP,
+      header: ColumnHeaderType.STEP,
       order: SortingOrder.ASCENDING,
     });
   });
@@ -244,27 +244,37 @@ describe('data table', () => {
   it('emits sortDataBy event with DESCENDING when header that is currently sorted is clicked', () => {
     const fixture = createComponent({
       headers: [
-        ColumnHeaders.VALUE,
-        ColumnHeaders.RUN,
-        ColumnHeaders.STEP,
-        ColumnHeaders.RELATIVE_TIME,
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+        ColumnHeaderType.RELATIVE_TIME,
       ],
-      sortingInfo: {header: ColumnHeaders.STEP, order: SortingOrder.ASCENDING},
+      sortingInfo: {
+        header: ColumnHeaderType.STEP,
+        order: SortingOrder.ASCENDING,
+      },
     });
     fixture.detectChanges();
     const headerElements = fixture.debugElement.queryAll(By.css('th'));
 
     headerElements[3].triggerEventHandler('click', {});
     expect(sortDataBySpy).toHaveBeenCalledOnceWith({
-      header: ColumnHeaders.STEP,
+      header: ColumnHeaderType.STEP,
       order: SortingOrder.DESCENDING,
     });
   });
 
   it('keeps sorting arrow invisible unless sorting on that header', () => {
     const fixture = createComponent({
-      headers: [ColumnHeaders.VALUE, ColumnHeaders.RUN, ColumnHeaders.STEP],
-      sortingInfo: {header: ColumnHeaders.VALUE, order: SortingOrder.ASCENDING},
+      headers: [
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+      ],
+      sortingInfo: {
+        header: ColumnHeaderType.VALUE,
+        order: SortingOrder.ASCENDING,
+      },
     });
     fixture.detectChanges();
     const headerElements = fixture.debugElement.queryAll(By.css('th'));
@@ -303,8 +313,15 @@ describe('data table', () => {
 
   it('shows downward arrow when order is DESCENDING', () => {
     const fixture = createComponent({
-      headers: [ColumnHeaders.VALUE, ColumnHeaders.RUN, ColumnHeaders.STEP],
-      sortingInfo: {header: ColumnHeaders.STEP, order: SortingOrder.DESCENDING},
+      headers: [
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+      ],
+      sortingInfo: {
+        header: ColumnHeaderType.STEP,
+        order: SortingOrder.DESCENDING,
+      },
     });
     fixture.detectChanges();
     const headerElements = fixture.debugElement.queryAll(By.css('th'));
@@ -343,8 +360,15 @@ describe('data table', () => {
 
   it('emits orderColumns with new order when dragged left', () => {
     const fixture = createComponent({
-      headers: [ColumnHeaders.VALUE, ColumnHeaders.RUN, ColumnHeaders.STEP],
-      sortingInfo: {header: ColumnHeaders.STEP, order: SortingOrder.DESCENDING},
+      headers: [
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+      ],
+      sortingInfo: {
+        header: ColumnHeaderType.STEP,
+        order: SortingOrder.DESCENDING,
+      },
     });
     fixture.detectChanges();
     const headerElements = fixture.debugElement.queryAll(By.css('th'));
@@ -365,16 +389,23 @@ describe('data table', () => {
     headerElements[2].query(By.css('.cell')).triggerEventHandler('dragend');
 
     expect(orderColumnsSpy).toHaveBeenCalledOnceWith([
-      ColumnHeaders.RUN,
-      ColumnHeaders.VALUE,
-      ColumnHeaders.STEP,
+      ColumnHeaderType.RUN,
+      ColumnHeaderType.VALUE,
+      ColumnHeaderType.STEP,
     ]);
   });
 
   it('emits orderColumns with new order when dragged right', () => {
     const fixture = createComponent({
-      headers: [ColumnHeaders.VALUE, ColumnHeaders.RUN, ColumnHeaders.STEP],
-      sortingInfo: {header: ColumnHeaders.STEP, order: SortingOrder.DESCENDING},
+      headers: [
+        ColumnHeaderType.VALUE,
+        ColumnHeaderType.RUN,
+        ColumnHeaderType.STEP,
+      ],
+      sortingInfo: {
+        header: ColumnHeaderType.STEP,
+        order: SortingOrder.DESCENDING,
+      },
     });
     fixture.detectChanges();
     const headerElements = fixture.debugElement.queryAll(By.css('th'));
@@ -395,9 +426,9 @@ describe('data table', () => {
     headerElements[2].query(By.css('.cell')).triggerEventHandler('dragend');
 
     expect(orderColumnsSpy).toHaveBeenCalledOnceWith([
-      ColumnHeaders.VALUE,
-      ColumnHeaders.STEP,
-      ColumnHeaders.RUN,
+      ColumnHeaderType.VALUE,
+      ColumnHeaderType.STEP,
+      ColumnHeaderType.RUN,
     ]);
   });
 });

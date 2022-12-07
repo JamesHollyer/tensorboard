@@ -46,7 +46,11 @@ import {
   URLDeserializedState,
 } from '../internal_types';
 import {groupCardIdWithMetdata} from '../utils';
-import {ColumnHeaders} from '../views/card_renderer/scalar_card_types';
+import {
+  ColumnHeader,
+  ColumnHeaderType,
+  FobState,
+} from '../views/card_renderer/scalar_card_types';
 import {
   buildOrReturnStateWithPinnedCopy,
   buildOrReturnStateWithUnresolvedImportedPins,
@@ -264,22 +268,23 @@ const {initialState, reducers: namespaceContextedReducer} =
       stepSelectorEnabled: false,
       rangeSelectionEnabled: false,
       singleSelectionHeaders: [
-        ColumnHeaders.RUN,
-        ColumnHeaders.SMOOTHED,
-        ColumnHeaders.VALUE,
-        ColumnHeaders.STEP,
-        ColumnHeaders.RELATIVE_TIME,
+        {type: ColumnHeaderType.RUN, enabled: true},
+        {type: ColumnHeaderType.SMOOTHED, enabled: true},
+        {type: ColumnHeaderType.VALUE, enabled: true},
+        {type: ColumnHeaderType.STEP, enabled: true},
+        {type: ColumnHeaderType.RELATIVE_TIME, enabled: true},
       ],
       rangeSelectionHeaders: [
-        ColumnHeaders.RUN,
-        ColumnHeaders.MIN_VALUE,
-        ColumnHeaders.MAX_VALUE,
-        ColumnHeaders.START_VALUE,
-        ColumnHeaders.END_VALUE,
-        ColumnHeaders.VALUE_CHANGE,
-        ColumnHeaders.PERCENTAGE_CHANGE,
-        ColumnHeaders.START_STEP,
-        ColumnHeaders.END_STEP,
+        {type: ColumnHeaderType.RUN, enabled: true},
+        {type: ColumnHeaderType.MIN_VALUE, enabled: true},
+        {type: ColumnHeaderType.MAX_VALUE, enabled: true},
+        {type: ColumnHeaderType.START_VALUE, enabled: true},
+        {type: ColumnHeaderType.END_VALUE, enabled: true},
+        {type: ColumnHeaderType.VALUE_CHANGE, enabled: true},
+        {type: ColumnHeaderType.PERCENTAGE_CHANGE, enabled: true},
+        {type: ColumnHeaderType.START_STEP, enabled: true},
+        {type: ColumnHeaderType.END_STEP, enabled: true},
+        {type: ColumnHeaderType.AVERAGE_VALUE, enabled: false},
       ],
       filteredPluginTypes: new Set(),
       stepMinMax: {
@@ -289,6 +294,7 @@ const {initialState, reducers: namespaceContextedReducer} =
     },
     {
       isSettingsPaneOpen: true,
+      isSlideoutMenuOpen: false,
       timeSeriesData: {
         scalars: {},
         histograms: {},
@@ -1101,23 +1107,84 @@ const reducer = createReducer(
     }
 
     // TODO(@jameshollyer): remove this logic with smoothing refactor *******
-    let orderAdjustedForSmoothed = newOrder;
-    const newSmoothedColumnIndex = newOrder.indexOf(ColumnHeaders.SMOOTHED);
-    const oldSmoothedColumnIndex = state.singleSelectionHeaders.indexOf(
-      ColumnHeaders.SMOOTHED
-    );
+    // let orderAdjustedForSmoothed = newOrder;
+    // const newSmoothedColumnIndex = newOrder.indexOf(ColumnHeaderType.SMOOTHED);
+    // const oldSmoothedColumnIndex = state.singleSelectionHeaders.indexOf(
+    //   ColumnHeaderType.SMOOTHED
+    // );
 
-    if (newSmoothedColumnIndex < 0 && oldSmoothedColumnIndex > 0) {
-      orderAdjustedForSmoothed = newOrder
-        .slice(0, oldSmoothedColumnIndex)
-        .concat([ColumnHeaders.SMOOTHED])
-        .concat(newOrder.slice(oldSmoothedColumnIndex, newOrder.length));
-    }
+    // if (newSmoothedColumnIndex < 0 && oldSmoothedColumnIndex > 0) {
+    //   orderAdjustedForSmoothed = newOrder
+    //     .slice(0, oldSmoothedColumnIndex)
+    //     .concat([ColumnHeaderType.SMOOTHED])
+    //     .concat(newOrder.slice(oldSmoothedColumnIndex, newOrder.length));
+    // }
     // *********************************************************************
 
     return {
       ...state,
-      singleSelectionHeaders: orderAdjustedForSmoothed,
+      singleSelectionHeaders: newOrder,
+    };
+  }),
+  on(actions.dataTableColumnEdited, (state, {fobState, newHeaders}) => {
+    const enableNewHeaders: ColumnHeader[] = [];
+    const disabledNewHeaders: ColumnHeader[] = [];
+
+    newHeaders.forEach((header) => {
+      if (header.enabled) {
+        enableNewHeaders.push(header);
+      } else {
+        disabledNewHeaders.push(header);
+      }
+    });
+
+    if (fobState === FobState.RANGE) {
+      return {
+        ...state,
+        rangeSelectionHeaders: enableNewHeaders.concat(disabledNewHeaders),
+      };
+    }
+
+    return {
+      ...state,
+      singleSelectionHeaders: enableNewHeaders.concat(disabledNewHeaders),
+    };
+  }),
+  on(actions.dataTableColumnToggled, (state, {fobState, headerType}) => {
+    if (fobState === FobState.RANGE) {
+      const enabledCount = getEnabledCount(state.rangeSelectionHeaders);
+      const newHeaders = moveHeader(
+        state.rangeSelectionHeaders.findIndex(
+          (element) => element.type === headerType
+        ),
+        enabledCount,
+        state.rangeSelectionHeaders
+      );
+      newHeaders[enabledCount] = {
+        type: newHeaders[enabledCount].type,
+        enabled: !newHeaders[enabledCount].enabled,
+      };
+      return {
+        ...state,
+        rangeSelectionHeaders: newHeaders,
+      };
+    }
+
+    const enabledCount = getEnabledCount(state.singleSelectionHeaders);
+    const newHeaders = moveHeader(
+      state.singleSelectionHeaders.findIndex(
+        (element) => element.type === headerType
+      ),
+      enabledCount,
+      state.singleSelectionHeaders
+    );
+    newHeaders[enabledCount] = {
+      type: newHeaders[enabledCount].type,
+      enabled: !newHeaders[enabledCount].enabled,
+    };
+    return {
+      ...state,
+      singleSelectionHeaders: newHeaders,
     };
   }),
   on(actions.metricsToggleVisiblePlugin, (state, {plugin}) => {
@@ -1145,6 +1212,9 @@ const reducer = createReducer(
   }),
   on(actions.metricsSettingsPaneClosed, (state) => {
     return {...state, isSettingsPaneOpen: false};
+  }),
+  on(actions.metricsSlideoutMenuToggled, (state) => {
+    return {...state, isSlideoutMenuOpen: !state.isSlideoutMenuOpen};
   })
 );
 
@@ -1173,4 +1243,26 @@ function buildTagToRuns(runTagInfo: {[run: string]: string[]}) {
     }
   }
   return tagToRuns;
+}
+
+// Move the item at sourceIndex to destinationIndex
+function moveHeader(
+  sourceIndex: number,
+  destinationIndex: number,
+  headers: ColumnHeader[]
+) {
+  const newHeaders = [...headers];
+  // Delete from original location
+  newHeaders.splice(sourceIndex, 1);
+  // Insert at destinationIndex.
+  newHeaders.splice(destinationIndex, 0, headers[sourceIndex]);
+  return newHeaders;
+}
+
+function getEnabledCount(headers: ColumnHeader[]) {
+  let count = 0;
+  while (count < headers.length - 1 && headers[count].enabled) {
+    count++;
+  }
+  return count;
 }

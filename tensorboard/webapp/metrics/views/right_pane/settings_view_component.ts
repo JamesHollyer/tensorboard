@@ -79,6 +79,7 @@ export class SettingsViewComponent {
 
   @Output() stepSelectorToggled = new EventEmitter<void>();
   @Output() rangeSelectionToggled = new EventEmitter<void>();
+  @Output() onSlideOutToggled = new EventEmitter<void>();
 
   @Input() isImageSupportEnabled!: boolean;
 
@@ -132,6 +133,8 @@ export class SettingsViewComponent {
 
   @Input() scalarPartitionX!: boolean;
   @Output() scalarPartitionXToggled = new EventEmitter();
+
+  columnEditMenuOpen: boolean = false;
 
   onScalarSmoothingInput(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -192,6 +195,11 @@ export class SettingsViewComponent {
 
   isAxisTypeStep(): boolean {
     return this.xAxisType === XAxisType.STEP;
+  }
+
+  OpenColumnEditMenu() {
+    console.log('OpenColumnEditMenu');
+    this.columnEditMenuOpen = true;
   }
 }
 

@@ -76,7 +76,7 @@ export interface PartitionedSeries {
  * ScalarCardComponent must know which piece of data is associated with each
  * value and the DataTable widget must know how to display each value.
  */
-export enum ColumnHeaders {
+export enum ColumnHeaderType {
   COLOR = 'COLOR',
   RELATIVE_TIME = 'RELATIVE_TIME',
   RUN = 'RUN',
@@ -92,6 +92,17 @@ export enum ColumnHeaders {
   MIN_VALUE = 'MIN_VALUE',
   MAX_VALUE = 'MAX_VALUE',
   PERCENTAGE_CHANGE = 'PERCENTAGE_CHANGE',
+  AVERAGE_VALUE = 'AVERAGE_VALUE',
+}
+
+export type ColumnHeader = {
+  type: ColumnHeaderType;
+  enabled: boolean;
+};
+
+export enum FobState {
+  SINGLE,
+  RANGE,
 }
 
 export enum SortingOrder {
@@ -100,7 +111,7 @@ export enum SortingOrder {
 }
 
 export interface SortingInfo {
-  header: ColumnHeaders;
+  header: ColumnHeaderType;
   order: SortingOrder;
 }
 
@@ -110,7 +121,7 @@ export interface SortingInfo {
  * run.
  */
 export type SelectedStepRunData = {
-  [key in ColumnHeaders]?: string | number;
+  [key in ColumnHeaderType]?: string | number;
 } & {id: string};
 
 /**

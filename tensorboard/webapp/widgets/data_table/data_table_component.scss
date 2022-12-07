@@ -42,11 +42,6 @@ $_accent: map-get(mat.get-color-config($tb-theme), accent);
     display: flex;
   }
 
-  .extra-right-padding {
-    // Add artificial padding to keep consistent with icons which have whitespace
-    padding-right: 1px;
-  }
-
   .row {
     white-space: nowrap;
   }

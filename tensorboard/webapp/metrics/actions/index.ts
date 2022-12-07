@@ -31,7 +31,9 @@ import {
   XAxisType,
 } from '../internal_types';
 import {
-  ColumnHeaders,
+  ColumnHeader,
+  ColumnHeaderType,
+  FobState,
   SortingInfo,
 } from '../views/card_renderer/scalar_card_types';
 
@@ -41,6 +43,10 @@ export const metricsSettingsPaneClosed = createAction(
 
 export const metricsSettingsPaneToggled = createAction(
   '[Metrics] Metrics Settings Pane Toggled'
+);
+
+export const metricsSlideoutMenuToggled = createAction(
+  '[Metrics] Slide out settings menu toggled'
 );
 
 export const metricsTagMetadataRequested = createAction(
@@ -203,7 +209,23 @@ export const sortingDataTable = createAction(
 export const dataTableColumnDrag = createAction(
   '[Metrics] Data table column dragged',
   props<{
-    newOrder: ColumnHeaders[];
+    newOrder: ColumnHeader[];
+  }>()
+);
+
+export const dataTableColumnEdited = createAction(
+  '[Metrics] Data table columns edited in edit menu',
+  props<{
+    fobState: FobState;
+    newHeaders: ColumnHeader[];
+  }>()
+);
+
+export const dataTableColumnToggled = createAction(
+  '[Metrics] Data table columns toggled in edit menu',
+  props<{
+    fobState: FobState;
+    headerType: ColumnHeaderType;
   }>()
 );
 

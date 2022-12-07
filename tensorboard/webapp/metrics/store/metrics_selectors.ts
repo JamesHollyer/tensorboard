@@ -30,7 +30,10 @@ import {
   TooltipSort,
   XAxisType,
 } from '../internal_types';
-import {ColumnHeaders} from '../views/card_renderer/scalar_card_types';
+import {
+  ColumnHeader,
+  ColumnHeaderType,
+} from '../views/card_renderer/scalar_card_types';
 import * as storeUtils from './metrics_store_internal_utils';
 import {
   CardMetadataMap,
@@ -389,14 +392,14 @@ export const getMetricsStepMinMax = createSelector(
 
 export const getSingleSelectionHeaders = createSelector(
   selectMetricsState,
-  (state: MetricsState): ColumnHeaders[] => {
+  (state: MetricsState): ColumnHeader[] => {
     return state.singleSelectionHeaders;
   }
 );
 
 export const getRangeSelectionHeaders = createSelector(
   selectMetricsState,
-  (state: MetricsState): ColumnHeaders[] => {
+  (state: MetricsState): ColumnHeader[] => {
     return state.rangeSelectionHeaders;
   }
 );
@@ -461,4 +464,9 @@ export const getMetricsFilteredPluginTypes = createSelector(
 export const isMetricsSettingsPaneOpen = createSelector(
   selectMetricsState,
   (state): boolean => state.isSettingsPaneOpen
+);
+
+export const isMetricsSlideoutMenuOpen = createSelector(
+  selectMetricsState,
+  (state): boolean => state.isSlideoutMenuOpen
 );

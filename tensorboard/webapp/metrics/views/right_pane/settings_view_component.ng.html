@@ -58,6 +58,7 @@ limitations under the License.
         >Link by step {{getLinkedTimeSelectionStartStep()}}
       </mat-checkbox>
     </div>
+    <div (click)="onSlideOutToggled.emit()">&lt; Open Column Edit Control</div>
   </div>
 
   <div class="control-row card-width">
@@ -228,3 +229,4 @@ When enabled, a non-monotonic time series composed of N monotonic pieces will be
     >
   </div>
 </section>
+<!-- <div class="slide-out-menu">Column Edit Menu</div> -->

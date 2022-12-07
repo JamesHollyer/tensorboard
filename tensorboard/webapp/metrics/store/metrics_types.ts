@@ -36,7 +36,10 @@ import {
   TooltipSort,
   XAxisType,
 } from '../internal_types';
-import {ColumnHeaders} from '../views/card_renderer/scalar_card_types';
+import {
+  ColumnHeader,
+  ColumnHeaderType,
+} from '../views/card_renderer/scalar_card_types';
 
 export const METRICS_FEATURE_KEY = 'metrics';
 
@@ -177,8 +180,8 @@ export interface MetricsNamespacedState {
   linkedTimeEnabled: boolean;
   stepSelectorEnabled: boolean;
   rangeSelectionEnabled: boolean;
-  singleSelectionHeaders: ColumnHeaders[];
-  rangeSelectionHeaders: ColumnHeaders[];
+  singleSelectionHeaders: ColumnHeader[];
+  rangeSelectionHeaders: ColumnHeader[];
   // Empty Set would signify "show all". `filteredPluginTypes` will never have
   // all pluginTypes in the Set.
   filteredPluginTypes: Set<PluginType>;
@@ -222,6 +225,7 @@ export interface MetricsSettings {
 export interface MetricsNonNamespacedState {
   timeSeriesData: TimeSeriesData;
   isSettingsPaneOpen: boolean;
+  isSlideoutMenuOpen: boolean;
   // Default settings. For the legacy reasons, we cannot change the name of the
   // prop. It either is set by application or a user via settings storage.
   settings: MetricsSettings;
