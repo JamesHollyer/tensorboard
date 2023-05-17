@@ -19,6 +19,7 @@ limitations under the License.
 import {NamespaceContextedState} from '../../app_routing/namespaced_state_reducer_helper';
 import {LoadState} from '../../types/data';
 import {SortDirection} from '../../types/ui';
+import {ColumnHeader} from '../../widgets/data_table/types';
 import {HparamValue} from '../data_source/runs_data_source_types';
 import {GroupBy, GroupByKey, SortKey} from '../types';
 
@@ -55,6 +56,7 @@ export interface RunsDataNamespacedState {
   userSetGroupByKey: GroupByKey | null;
   colorGroupRegexString: string;
   regexFilter: string;
+  runsColumns: ColumnHeader[];
 }
 
 export interface RunsDataNonNamespacedState {

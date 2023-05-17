@@ -281,8 +281,10 @@ export class ScalarCardDataTable {
     if (header.type === ColumnHeaderType.RUN) {
       return makeValueSortable(this.chartMetadataMap[point.id].displayName);
     }
-
-    return makeValueSortable(point[header.name]);
+    if (typeof point[header.name] === 'boolean') {
+      return makeValueSortable(point[header.name] ? 1 : 0);
+    }
+    return makeValueSortable(point[header.name] as string | number | null);
   }
 
   orderColumns(headers: ColumnHeader[]) {

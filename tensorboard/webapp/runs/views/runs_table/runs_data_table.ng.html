@@ -1,0 +1,28 @@
+<tb-data-table
+  [headers]="columnHeaders"
+  [data]="data"
+  [sortingInfo]="sortingInfo"
+  [columnCustomizationEnabled]="columnCustomizationEnabled"
+  [smoothingEnabled]="smoothingEnabled"
+  (sortDataBy)="sortDataBy.emit($event)"
+  (orderColumns)="orderColumns($event)"
+>
+  <ng-container *ngFor="let runData of data">
+    <tr class="row" [ngClass]="rowClass">
+      <td class="row-circle">
+        <span [style.backgroundColor]="runData['color']"></span>
+      </td>
+      <ng-container *ngFor="let header of columnHeaders">
+        <td *ngIf="header.enabled" class="cell">
+          <tb-data-table-cell [header]="header" [datum]="runData[header.name]">
+            <mat-checkbox
+              [checked]="runData[header.name]"
+              (change)="onRunSelectionToggle.emit(runData.id)"
+              title="Click to toggle run selection or double click to select only this run."
+            ></mat-checkbox>
+          </tb-data-table-cell>
+        </td>
+      </ng-container>
+    </tr>
+  </ng-container>
+</tb-data-table>

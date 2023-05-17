@@ -26,6 +26,7 @@ import {
   RUNS_FEATURE_KEY,
 } from './runs_types';
 import {createGroupBy} from './utils';
+import {ColumnHeader} from '../../widgets/data_table/types';
 
 const getRunsState = createFeatureSelector<RunsState>(RUNS_FEATURE_KEY);
 
@@ -171,6 +172,17 @@ export const getRunSelectorRegexFilter = createSelector(
   getDataState,
   (state: RunsDataState): string => {
     return state.regexFilter;
+  }
+);
+
+/**
+ * Gets Observable that emits the current enabled ColumnHeaders for the runs
+ * table in order.
+ */
+export const getRunsColumns = createSelector(
+  getDataState,
+  (state: RunsDataState): ColumnHeader[] => {
+    return state.runsColumns;
   }
 );
 

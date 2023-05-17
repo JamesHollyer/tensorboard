@@ -38,6 +38,7 @@ import {
   RunsUiState,
 } from './runs_types';
 import {createGroupBy, groupRuns} from './utils';
+import {ColumnHeaderType} from '../../widgets/data_table/types';
 
 const {
   initialState: dataInitialState,
@@ -54,6 +55,20 @@ const {
     userSetGroupByKey: null,
     colorGroupRegexString: '',
     regexFilter: '',
+    runsColumns: [
+      {
+        type: ColumnHeaderType.CUSTOM,
+        name: 'selected',
+        displayName: '',
+        enabled: true,
+      },
+      {
+        type: ColumnHeaderType.RUN,
+        name: 'run',
+        displayName: 'Run',
+        enabled: true,
+      },
+    ],
   },
   {
     runIds: {},

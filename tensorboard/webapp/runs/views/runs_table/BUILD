@@ -15,6 +15,16 @@ tf_sass_binary(
 )
 
 tf_sass_binary(
+    name = "runs_data_table_styles",
+    src = "runs_data_table.scss",
+    strict_deps = False,
+    deps = [
+        "//tensorboard/webapp:angular_material_sass_deps",
+        "//tensorboard/webapp/theme",
+    ],
+)
+
+tf_sass_binary(
     name = "runs_group_menu_button_styles",
     src = "runs_group_menu_button_component.scss",
     strict_deps = False,
@@ -52,14 +62,17 @@ tf_ng_module(
         "runs_group_menu_button_container.ts",
         "runs_table_component.ts",
         "runs_table_container.ts",
+        "runs_data_table.ts",
         "runs_table_module.ts",
     ],
     assets = [
         ":regex_edit_dialog_styles",
         ":runs_group_menu_button_styles",
         ":runs_table_styles",
+        ":runs_data_table_styles",
         "regex_edit_dialog.ng.html",
         "runs_table_component.ng.html",
+        "runs_data_table.ng.html",
         "runs_group_menu_button_component.ng.html",
     ],
     deps = [
@@ -84,6 +97,7 @@ tf_ng_module(
         "//tensorboard/webapp/experiments:types",
         "//tensorboard/webapp/hparams",
         "//tensorboard/webapp/hparams:types",
+        "//tensorboard/webapp/metrics:types",
         "//tensorboard/webapp/runs:types",
         "//tensorboard/webapp/runs/actions",
         "//tensorboard/webapp/runs/data_source",
@@ -95,6 +109,8 @@ tf_ng_module(
         "//tensorboard/webapp/types:ui",
         "//tensorboard/webapp/util:colors",
         "//tensorboard/webapp/util:matcher",
+        "//tensorboard/webapp/widgets/data_table",
+        "//tensorboard/webapp/widgets/data_table:types",
         "//tensorboard/webapp/widgets/experiment_alias",
         "//tensorboard/webapp/widgets/filter_input",
         "//tensorboard/webapp/widgets/range_input",

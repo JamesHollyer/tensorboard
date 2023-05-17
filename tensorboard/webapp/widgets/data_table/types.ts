@@ -38,6 +38,7 @@ export enum ColumnHeaderType {
   STEP_AT_MIN = 'STEP_AT_MIN',
   MEAN = 'MEAN',
   RAW_CHANGE = 'RAW_CHANGE',
+  CUSTOM = 'CUSTOM',
 }
 
 export interface ColumnHeader {
@@ -67,11 +68,12 @@ export interface SortingInfo {
  * DataTable. It will have a value for each required ColumnHeader for a given
  * run.
  */
-export type TableData = Record<string, string | number> & {
+export type TableData = Record<string, string | number | boolean> & {
   id: string;
 };
 
 export enum DataTableMode {
   SINGLE,
   RANGE,
+  RUN,
 }
